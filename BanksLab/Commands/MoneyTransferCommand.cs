@@ -1,22 +1,24 @@
-﻿namespace BanksLab.Commands
+﻿using BanksLab.BankAccounts;
+
+namespace BanksLab.Commands
 {
-    public class MoneyTransferCommand : BanksLab.CompositeBankAccountCommand
+    public class MoneyTransferCommand : CompositeBankAccountCommand
     {
         public MoneyTransferCommand(BankAccount from,
-            BankAccount to, int amount)
+            BankAccount to, double amount)
         {
             AddRange(new[]
             {
-                new BanksLab.BankAccountCommand(from,
-                    BanksLab.BankAccountCommand.Action.Withdraw, amount),
-                new BanksLab.BankAccountCommand(to,
-                    BanksLab.BankAccountCommand.Action.Deposit, amount)
+                new BankAccountCommand(from,
+                    BankAccountCommand.Action.Withdraw, amount),
+                new BankAccountCommand(to,
+                    BankAccountCommand.Action.Deposit, amount)
             });
         }
 
         public override void Call()
         {
-            BanksLab.BankAccountCommand last = null;
+            BankAccountCommand last = null;
             foreach (var cmd in this)
                 if (last == null || last.Success)
                 {

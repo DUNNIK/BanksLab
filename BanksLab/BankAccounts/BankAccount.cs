@@ -1,19 +1,29 @@
-﻿namespace BanksLab.BankAccounts
+﻿using System;
+using System.Threading.Tasks;
+
+namespace BanksLab.BankAccounts
 {
     public abstract class BankAccount
     {
-        protected int balance;
-        protected int overdraftLimit = 0;
-
+        protected readonly DateTime CreateTime = DateTime.Now;
+        public bool StopAddPercents = false;
+        protected double Balance;
+        protected readonly int OverdraftLimit = 0;
+        protected double Percent;
         public BankAccount(int balance = 0)
         {
-            this.balance = balance;
+            Balance = balance;
         }
 
-        public abstract void Deposit(int amount);
+        public void Deposit(double amount)
+        {
+            Balance += amount;
+        }
+        
 
-        public abstract bool Withdraw(int amount);
+        public abstract bool Withdraw(double amount);
 
-        public abstract void Transfer(BankAccount to);
+        public abstract void Transfer(BankAccount to, double amount);
+        
     }
 }

@@ -1,4 +1,5 @@
-﻿using BanksLab.Exceptions;
+﻿using BanksLab.BankAccounts;
+using BanksLab.Exceptions;
 
 namespace BanksLab.Commands
 {
@@ -12,9 +13,9 @@ namespace BanksLab.Commands
 
         private readonly BankAccount account;
         private readonly Action action;
-        private readonly int amount;
+        private readonly double amount;
 
-        public BankAccountCommand(BankAccount account, Action action, int amount)
+        public BankAccountCommand(BankAccount account, Action action, double amount)
         {
             this.account = account;
             this.action = action;
