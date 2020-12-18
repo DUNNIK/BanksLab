@@ -7,8 +7,9 @@ namespace BanksLab.BankAccounts
     {
         protected readonly DateTime CreateTime = DateTime.Now;
         public bool StopAddPercents = false;
+        public bool StopRemoveCommission = false;
         protected double Balance;
-        protected readonly int OverdraftLimit = 0;
+        protected int OverdraftLimit = 0;
         protected double Percent;
         public BankAccount(int balance = 0)
         {
@@ -23,7 +24,10 @@ namespace BanksLab.BankAccounts
 
         public abstract bool Withdraw(double amount);
 
-        public abstract void Transfer(BankAccount to, double amount);
+        public void Transfer(BankAccount to, double amount)
+        {
+            var translation = new Commands.MoneyTransferCommand(this, to, amount);
+        }
         
     }
 }

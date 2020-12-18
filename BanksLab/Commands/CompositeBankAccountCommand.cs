@@ -10,7 +10,8 @@ namespace BanksLab.Commands
         {
         }
 
-        public CompositeBankAccountCommand(IEnumerable<BankAccountCommand> collection) : base(collection)
+        public CompositeBankAccountCommand(IEnumerable<BankAccountCommand> collection)
+            : base(collection)
         {
         }
 

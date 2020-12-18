@@ -11,27 +11,27 @@ namespace BanksLab.Commands
             Withdraw
         }
 
-        private readonly BankAccount account;
-        private readonly Action action;
-        private readonly double amount;
+        private readonly BankAccount _account;
+        private readonly Action _action;
+        private readonly double _amount;
 
         public BankAccountCommand(BankAccount account, Action action, double amount)
         {
-            this.account = account;
-            this.action = action;
-            this.amount = amount;
+            _account = account;
+            _action = action;
+            _amount = amount;
         }
 
         public void Call()
         {
-            switch (action)
+            switch (_action)
             {
                 case Action.Deposit:
-                    account.Deposit(amount);
+                    _account.Deposit(_amount);
                     Success = true;
                     break;
                 case Action.Withdraw:
-                    Success = account.Withdraw(amount);
+                    Success = _account.Withdraw(_amount);
                     break;
                 default:
                     throw new ActionArgumentsException();
@@ -41,13 +41,13 @@ namespace BanksLab.Commands
         public void Undo()
         {
             if (!Success) return;
-            switch (action)
+            switch (_action)
             {
                 case Action.Deposit:
-                    account.Withdraw(amount);
+                    _account.Withdraw(_amount);
                     break;
                 case Action.Withdraw:
-                    account.Deposit(amount);
+                    _account.Deposit(_amount);
                     break;
                 default:
                     throw new ActionArgumentsException();

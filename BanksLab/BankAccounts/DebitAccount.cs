@@ -7,10 +7,11 @@ namespace BanksLab.BankAccounts
     public class DebitAccount : BankAccount
     {
         private DateTime _lastPercentsTime = DateTime.Now;
-        private double _monthPercents = 0;
-        public DebitAccount(double percent)
+        private double _monthPercents;
+        public DebitAccount(double percent, int balance = 0) : base(balance)
         {
             Percent = percent;
+            AddPercents();
         }
 
         public override bool Withdraw(double amount)
@@ -20,11 +21,7 @@ namespace BanksLab.BankAccounts
             return true;
         }
 
-        public override void Transfer(BankAccount to, double amount)
-        {
-            var translation = new Commands.MoneyTransferCommand(this, to, amount);
-        }
-        protected async void AddPercents()
+        private async void AddPercents()
         {
             await Task.Run(() =>
             {

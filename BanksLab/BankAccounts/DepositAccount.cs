@@ -5,11 +5,14 @@ namespace BanksLab.BankAccounts
 {
     public class DepositAccount : BankAccount
     {
+        private readonly DateTime _depositEndDate;
         private DateTime _lastPercentsTime = DateTime.Now;
-        private double _monthPercents = 0;
-        public DepositAccount(int balance = 0) : base(balance)
+        private double _monthPercents;
+        public DepositAccount(DateTime depositEndDate, int balance = 0) : base(balance)
         {
+            _depositEndDate = depositEndDate;
             Percent = FindingPercent();
+            AddPercents();
         }
 
         private double FindingPercent()
@@ -46,12 +49,10 @@ namespace BanksLab.BankAccounts
         }
         public override bool Withdraw(double amount)
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Transfer(BankAccount to, double amount)
-        {
-            throw new NotImplementedException();
+            if (_depositEndDate > DateTime.Now) return false;
+            if (Balance - amount < OverdraftLimit) return false;
+            Balance -= amount;
+            return true;
         }
         protected async void AddPercents()
         {
