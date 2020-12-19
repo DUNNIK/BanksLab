@@ -7,15 +7,16 @@ namespace BanksLab.BankAccounts
     {
         private readonly int _commission;
 
-        public CreditAccount(int overdraftLimit, int commission)
+        public CreditAccount(Client.Client client, int bankLimitAmount, CreditAccountInformation information) : base(client, bankLimitAmount, information.Balance)
         {
-            OverdraftLimit = overdraftLimit;
-            _commission = commission;
+            OverdraftLimit = information.OverdraftLimit;
+            _commission = information.Commission;
             RemoveCommission();
         }
 
         public override bool Withdraw(double amount)
         {
+            if (CheckingForNotValidateAccount(amount)) return false;
             if (!(Balance - amount >= OverdraftLimit)) return false;
             Balance -= amount;
             return true;
@@ -40,6 +41,20 @@ namespace BanksLab.BankAccounts
         private bool MonthCondition()
         {
             return (DateTime.Now - CreateTime).Days % 31 == 0;
+        }
+    }
+
+    public class CreditAccountInformation
+    {
+        public readonly int OverdraftLimit;
+        public readonly int Commission;
+        public readonly int Balance;
+
+        public CreditAccountInformation(int overdraftLimit, int commission, int balance = 0)
+        {
+            OverdraftLimit = overdraftLimit;
+            Commission = commission;
+            Balance = balance;
         }
     }
 }

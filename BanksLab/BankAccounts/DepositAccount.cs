@@ -8,10 +8,10 @@ namespace BanksLab.BankAccounts
         private readonly DateTime _depositEndDate;
         private DateTime _lastPercentsTime = DateTime.Now;
         private double _monthPercents;
-        public DepositAccount(DateTime depositEndDate, int balance = 0) : base(balance)
+        public DepositAccount(Client.Client client, int bankLimitAmount, DepositAccountInformation information) : base(client, bankLimitAmount, information.Balance)
         {
-            _depositEndDate = depositEndDate;
-            Percent = FindingPercent();
+            _depositEndDate = information.DepositEndDate;
+            PercentOnAccount = FindingPercent();
             AddPercents();
         }
 
@@ -49,6 +49,7 @@ namespace BanksLab.BankAccounts
         }
         public override bool Withdraw(double amount)
         {
+            if (CheckingForNotValidateAccount(amount)) return false;
             if (_depositEndDate > DateTime.Now) return false;
             if (Balance - amount < OverdraftLimit) return false;
             Balance -= amount;
@@ -70,14 +71,14 @@ namespace BanksLab.BankAccounts
         private void UpdateDailyInformation()
         {
             _lastPercentsTime = DateTime.Now;
-            _monthPercents += Balance * (Percent / 365);
+            _monthPercents += Balance * (PercentOnAccount / 365);
         }
         private void AddPercentsForMonth()
         {
             if (!MonthCondition()) return;
             Balance += _monthPercents;
             _monthPercents = 0;
-            Percent = FindingPercent();
+            PercentOnAccount = FindingPercent();
         }
         private bool DayCondition()
         {
@@ -86,6 +87,17 @@ namespace BanksLab.BankAccounts
         private bool MonthCondition()
         {
             return (DateTime.Now - CreateTime).Days % 31 == 0;
+        }
+    }
+    public class DepositAccountInformation
+    {
+        public readonly DateTime DepositEndDate;
+        public readonly int Balance;
+
+        public DepositAccountInformation(DateTime depositEndDate, int balance = 0)
+        {
+            DepositEndDate = depositEndDate;
+            Balance = balance;
         }
     }
 }

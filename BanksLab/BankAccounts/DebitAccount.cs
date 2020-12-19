@@ -8,14 +8,15 @@ namespace BanksLab.BankAccounts
     {
         private DateTime _lastPercentsTime = DateTime.Now;
         private double _monthPercents;
-        public DebitAccount(double percent, int balance = 0) : base(balance)
+        public DebitAccount(Client.Client client, int bankLimitAmount, DebitAccountInformation information) : base(client, bankLimitAmount, information.Balance)
         {
-            Percent = percent;
+            PercentOnAccount = information.PercentOnAccount;
             AddPercents();
         }
 
         public override bool Withdraw(double amount)
         {
+            if (CheckingForNotValidateAccount(amount)) return false;
             if (Balance - amount < OverdraftLimit) return false;
             Balance -= amount;
             return true;
@@ -37,7 +38,7 @@ namespace BanksLab.BankAccounts
         private void UpdateDailyInformation()
         {
             _lastPercentsTime = DateTime.Now;
-            _monthPercents += Balance * (Percent / 365);
+            _monthPercents += Balance * (PercentOnAccount / 365);
         }
         private void AddPercentsForMonth()
         {
@@ -52,6 +53,17 @@ namespace BanksLab.BankAccounts
         private bool MonthCondition()
         {
             return (DateTime.Now - CreateTime).Days % 31 == 0;
+        }
+    }
+    public class DebitAccountInformation
+    {
+        public readonly double PercentOnAccount;
+        public readonly int Balance;
+
+        public DebitAccountInformation(double percentOnAccount, int balance = 0)
+        {
+            PercentOnAccount = percentOnAccount;
+            Balance = balance;
         }
     }
 }

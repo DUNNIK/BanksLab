@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BanksLab.BankAccounts;
+using BanksLab.Client;
 
 namespace BanksLab
 {
@@ -8,6 +10,8 @@ namespace BanksLab
     {
         public static void Main()
         {
+            var clientBuilder = new ClientBuilder();
+            
             
         }
     }
