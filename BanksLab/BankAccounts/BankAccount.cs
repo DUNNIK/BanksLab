@@ -10,7 +10,7 @@ namespace BanksLab.BankAccounts
         public bool StopRemoveCommission = false;
         protected double Balance;
         protected int OverdraftLimit = 0;
-        protected int BankLimitAmount;
+        private int BankLimitAmount;
         protected double PercentOnAccount;
         public BankAccount(Client.Client client, int bankLimitAmount, int balance = 0)
         {
@@ -36,6 +36,10 @@ namespace BanksLab.BankAccounts
             if (CheckingForNotValidateAccount(amount)) return;
             var translation = new Commands.MoneyTransferCommand(this, to, amount);
         }
-        
+
+        public override string ToString()
+        {
+            return $"Your Balance: {Balance}";
+        }
     }
 }

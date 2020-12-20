@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "yDeHVZB6MBmq6jLXfigiFlKUVDs5mAo6FdKP2QpqfI+ug+PZId8k4mBsD+Lbnsn/MJVwWqcVVO3E28zLL6o3xQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\NIKITOS\\RiderProjects\\BanksLab\\Banks.Tests\\Banks.Tests.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\NIKITOS\\.nuget\\packages\\microsoft.codecoverage\\16.5.0\\microsoft.codecoverage.16.5.0.nupkg.sha512",
+    "C:\\Users\\NIKITOS\\.nuget\\packages\\microsoft.net.test.sdk\\16.5.0\\microsoft.net.test.sdk.16.5.0.nupkg.sha512",
+    "C:\\Microsoft\\Xamarin\\NuGet\\nunit\\3.12.0\\nunit.3.12.0.nupkg.sha512",
+    "C:\\Users\\NIKITOS\\.nuget\\packages\\nunit3testadapter\\3.16.1\\nunit3testadapter.3.16.1.nupkg.sha512"
+  ],
+  "logs": []
+}

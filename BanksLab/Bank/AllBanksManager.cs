@@ -5,7 +5,7 @@ namespace BanksLab.Bank
 {
     public class AllBanksManager
     {
-        private static List<Bank> Banks = new List<Bank>{new TinkoffBank(500)};
+        public static List<Bank> Banks = new List<Bank>{new TinkoffBank(500)};
 
         public Bank Tinkoff()
         {

@@ -10,8 +10,6 @@ namespace BanksLab
     {
         public static void Main()
         {
-            var clientBuilder = new ClientBuilder();
-            
             
         }
     }

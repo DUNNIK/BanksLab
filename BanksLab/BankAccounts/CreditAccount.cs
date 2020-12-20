@@ -28,8 +28,10 @@ namespace BanksLab.BankAccounts
             {
                 while(!StopRemoveCommission)
                 {
-                    if (!MinusBalance() && !MonthCondition()) continue;
-                    Balance -= _commission;
+                    if (MinusBalance() && MonthCondition())
+                    {
+                        Balance -= _commission;
+                    }
                 }
             });
         }
