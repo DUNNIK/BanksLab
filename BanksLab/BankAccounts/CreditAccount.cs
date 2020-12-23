@@ -6,7 +6,7 @@ namespace BanksLab.BankAccounts
     public class CreditAccount : BankAccount
     {
         private readonly int _commission;
-
+        private DateTime _lastCommissionTime = SystemTime.Now.Invoke();
         public CreditAccount(Client.Client client, int bankLimitAmount, CreditAccountInformation information) : base(client, bankLimitAmount, information.Balance)
         {
             OverdraftLimit = information.OverdraftLimit;
@@ -30,6 +30,7 @@ namespace BanksLab.BankAccounts
                 {
                     if (MinusBalance() && MonthCondition())
                     {
+                        _lastCommissionTime = _lastCommissionTime.AddMonths(1);
                         Balance -= _commission;
                     }
                 }
@@ -42,7 +43,7 @@ namespace BanksLab.BankAccounts
         }
         private bool MonthCondition()
         {
-            return (DateTime.Now - CreateTime).Days % 31 == 0;
+            return (SystemTime.Now.Invoke() - _lastCommissionTime).Days >= 31;
         }
     }
 

@@ -6,7 +6,8 @@ namespace BanksLab.BankAccounts
 {
     public class DebitAccount : BankAccount
     {
-        private DateTime _lastPercentsTime = DateTime.Now;
+        private DateTime _lastPercentsTime = SystemTime.Now.Invoke();
+        private DateTime _lastChargeTime = SystemTime.Now.Invoke();
         private double _monthPercents;
         public DebitAccount(Client.Client client, int bankLimitAmount, DebitAccountInformation information) : base(client, bankLimitAmount, information.Balance)
         {
@@ -28,7 +29,6 @@ namespace BanksLab.BankAccounts
             {
                 while(!StopAddPercents)
                 {
-                    if (!DayCondition()) continue;
                     UpdateDailyInformation();
                     AddPercentsForMonth();
                 }
@@ -37,22 +37,24 @@ namespace BanksLab.BankAccounts
 
         private void UpdateDailyInformation()
         {
-            _lastPercentsTime = DateTime.Now;
+            if (!DayCondition()) return;
+            _lastPercentsTime = _lastPercentsTime.AddDays(1);
             _monthPercents += Balance * (PercentOnAccount / 365);
         }
         private void AddPercentsForMonth()
         {
             if (!MonthCondition()) return;
+            _lastChargeTime = _lastChargeTime.AddMonths(1);
             Balance += _monthPercents;
             _monthPercents = 0;
         }
         private bool DayCondition()
         {
-            return (DateTime.Now - _lastPercentsTime).Hours == 24;
+            return (SystemTime.Now.Invoke() - _lastPercentsTime).Days >= 1;
         }
         private bool MonthCondition()
         {
-            return (DateTime.Now - CreateTime).Days % 31 == 0;
+            return (_lastPercentsTime - _lastChargeTime).Days == 31;
         }
     }
     public class DebitAccountInformation

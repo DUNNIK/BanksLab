@@ -6,7 +6,8 @@ namespace BanksLab.BankAccounts
     public class DepositAccount : BankAccount
     {
         private readonly DateTime _depositEndDate;
-        private DateTime _lastPercentsTime = DateTime.Now;
+        private DateTime _lastPercentsTime = SystemTime.Now.Invoke();
+        private DateTime _lastChargeTime = SystemTime.Now.Invoke();
         private double _monthPercents;
         public DepositAccount(Client.Client client, int bankLimitAmount, DepositAccountInformation information) : base(client, bankLimitAmount, information.Balance)
         {
@@ -50,18 +51,18 @@ namespace BanksLab.BankAccounts
         public override bool Withdraw(double amount)
         {
             if (CheckingForNotValidateAccount(amount)) return false;
-            if (_depositEndDate > DateTime.Now) return false;
+            if (_depositEndDate > SystemTime.Now.Invoke()) return false;
             if (Balance - amount < OverdraftLimit) return false;
             Balance -= amount;
             return true;
         }
-        protected async void AddPercents()
+
+        private async void AddPercents()
         {
             await Task.Run(() =>
             {
                 while(!StopAddPercents)
                 {
-                    if (!DayCondition()) continue;
                     UpdateDailyInformation();
                     AddPercentsForMonth();
                 }
@@ -70,26 +71,28 @@ namespace BanksLab.BankAccounts
 
         private void UpdateDailyInformation()
         {
-            _lastPercentsTime = DateTime.Now;
+            if (!DayCondition()) return;
+            _lastPercentsTime = _lastPercentsTime.AddDays(1);
             _monthPercents += Balance * (PercentOnAccount / 365);
         }
         private void AddPercentsForMonth()
         {
             if (!MonthCondition()) return;
+            _lastChargeTime = _lastChargeTime.AddMonths(1);
             Balance += _monthPercents;
             _monthPercents = 0;
             PercentOnAccount = FindingPercent();
         }
         private bool DayCondition()
         {
-            return (DateTime.Now - _lastPercentsTime).Hours == 24;
+            return (SystemTime.Now.Invoke() - _lastPercentsTime).Days >= 1;
         }
         private bool MonthCondition()
         {
-            return (DateTime.Now - CreateTime).Days % 31 == 0;
+            return (_lastPercentsTime - _lastChargeTime).Days == 31;
         }
     }
-    public class DepositAccountInformation
+    public abstract class DepositAccountInformation
     {
         public readonly DateTime DepositEndDate;
         public readonly int Balance;

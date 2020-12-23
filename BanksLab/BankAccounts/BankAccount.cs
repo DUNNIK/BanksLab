@@ -5,7 +5,7 @@ namespace BanksLab.BankAccounts
     public abstract class BankAccount
     {
         private Client.Client Client;
-        protected readonly DateTime CreateTime = DateTime.Now;
+        protected readonly DateTime CreateTime = SystemTime.Now.Invoke();
         public bool StopAddPercents = false;
         public bool StopRemoveCommission = false;
         protected double Balance;

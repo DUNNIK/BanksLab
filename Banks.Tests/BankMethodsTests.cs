@@ -1,3 +1,6 @@
+using System;
+using System.Threading;
+using BanksLab;
 using BanksLab.BankAccounts;
 using BanksLab.Client;
 using NUnit.Framework;
@@ -25,7 +28,7 @@ namespace Banks.Tests
                 .ChooseBank
                 .Tinkoff()
                 .CreateBankAccount
-                .CreatDebitAccount(_client, new DebitAccountInformation(4, 200));
+                .CreatDebitAccount(_client, new DebitAccountInformation(365, 200));
             
             var clientBuilder1 = new ClientBuilder();
             _client1 = clientBuilder1
@@ -39,7 +42,6 @@ namespace Banks.Tests
                 .Tinkoff()
                 .CreateBankAccount
                 .CreatCreditAccount(_client1, new CreditAccountInformation(-3000, 300, 5000));
-            _client.TransferMoney(_client.BankAccountsIdsList[0],_client1.BankAccountsIdsList[0], 300);
         }
 
         [Test]
