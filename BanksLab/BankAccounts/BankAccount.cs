@@ -1,21 +1,25 @@
 ﻿using System;
+using System.Linq;
+using BanksLab.Commands;
 
 namespace BanksLab.BankAccounts
 {
     public abstract class BankAccount
     {
-        private Client.Client Client;
+        private readonly Client.Client _client;
         protected readonly DateTime CreateTime = SystemTime.Now.Invoke();
         public bool StopAddPercents = false;
         public bool StopRemoveCommission = false;
         protected double Balance;
         protected int OverdraftLimit = 0;
-        private int BankLimitAmount;
+        private readonly int _bankLimitAmount;
         protected double PercentOnAccount;
-        public BankAccount(Client.Client client, int bankLimitAmount, int balance = 0)
+        private readonly CompositeBankAccountCommand _accountCommandsHistory = new CompositeBankAccountCommand();
+
+        protected BankAccount(Client.Client client, int bankLimitAmount, int balance = 0)
         {
-            Client = client;
-            BankLimitAmount = bankLimitAmount;
+            _client = client;
+            _bankLimitAmount = bankLimitAmount;
             Balance = balance;
         }
 
@@ -27,7 +31,7 @@ namespace BanksLab.BankAccounts
 
         protected bool CheckingForNotValidateAccount(double amount)
         {
-            return !Client.IsValidate() && amount >= BankLimitAmount;
+            return !_client.IsValidate() && amount >= _bankLimitAmount;
         }
         public abstract bool Withdraw(double amount);
 
@@ -40,6 +44,18 @@ namespace BanksLab.BankAccounts
         public override string ToString()
         {
             return $"Your Balance: {Balance}";
+        }
+
+        public void UpdateAccountHistory(ICommand newCommand)
+        {
+            _accountCommandsHistory.Add(newCommand);
+        }
+
+        public void RestorePreviousAccountState()
+        {
+            var command = _accountCommandsHistory.Last();
+            _accountCommandsHistory.Remove(command);
+            command.Undo();
         }
     }
 }

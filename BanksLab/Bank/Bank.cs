@@ -5,11 +5,11 @@ namespace BanksLab.Bank
 {
     public abstract class Bank
     {
-        public int NotValidateSum;
-        public Dictionary<string, BankAccount> Accounts = new Dictionary<string, BankAccount>();
+        protected readonly int NotValidateSum;
+        public readonly Dictionary<string, BankAccount> Accounts = new Dictionary<string, BankAccount>();
         public BankAccountFactory CreateBankAccount => new BankAccountFactory(this);
 
-        public Bank(int notValidateSum)
+        protected Bank(int notValidateSum)
         {
             NotValidateSum = notValidateSum;
         }

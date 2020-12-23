@@ -27,7 +27,7 @@ namespace BanksLab.Client
             PassportDetails = client.PassportDetails;
         }
         
-        public AllBanksManager ChooseBank => new AllBanksManager();
+        public static AllBanksManager ChooseBank => new AllBanksManager();
 
         public bool IsValidate()
         {
@@ -39,6 +39,7 @@ namespace BanksLab.Client
             if (IsItYourAccount(id)) throw new YourBankAccountException();
             var account = FindAccount(id);
             var command = new BankAccountCommand(account, BankAccountCommand.Action.Deposit, amount);
+            account.UpdateAccountHistory(command);
             command.Call();
         }
         public void WithdrawMoneyOnYourBankAccount(string id, double amount)
@@ -46,6 +47,7 @@ namespace BanksLab.Client
             if (IsItYourAccount(id)) throw new YourBankAccountException();
             var account = FindAccount(id);
             var command = new BankAccountCommand(account, BankAccountCommand.Action.Withdraw, amount);
+            account.UpdateAccountHistory(command);
             command.Call();
         }
         public void TransferMoney(string fromId, string toId, double amount)
@@ -55,6 +57,10 @@ namespace BanksLab.Client
             BankAccount fromAccount = FindAccount(fromId), toAccount = FindAccount(toId);
 
             var moneyTransferCommand = new MoneyTransferCommand(fromAccount, toAccount, amount);
+            
+            fromAccount.UpdateAccountHistory(moneyTransferCommand);
+            toAccount.UpdateAccountHistory(moneyTransferCommand);
+            
             moneyTransferCommand.Call();
         }
         private static BankAccount FindAccount(string id)
@@ -77,6 +83,13 @@ namespace BanksLab.Client
         private bool IsItYourAccount(string id)
         {
             return !BankAccountsIdsList.Contains(id);
+        }
+
+        public void RestorePreviousAccountState(string accountId)
+        {
+            if (IsItYourAccount(accountId)) throw new YourBankAccountException();
+            var account = FindAccount(accountId);
+            account.RestorePreviousAccountState();
         }
     }
 }

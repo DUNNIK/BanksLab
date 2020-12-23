@@ -23,8 +23,7 @@ namespace Banks.Tests
                 .AddAddress("ABC123")
                 .AddPassportDetails("727272")
                 .Build();
-            _client
-                .ChooseBank
+            Client.ChooseBank
                 .Tinkoff()
                 .CreateBankAccount
                 .CreatDebitAccount(_client, new DebitAccountInformation(365, 200));

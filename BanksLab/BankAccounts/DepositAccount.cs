@@ -92,7 +92,7 @@ namespace BanksLab.BankAccounts
             return (_lastPercentsTime - _lastChargeTime).Days == 31;
         }
     }
-    public abstract class DepositAccountInformation
+    public class DepositAccountInformation
     {
         public readonly DateTime DepositEndDate;
         public readonly int Balance;

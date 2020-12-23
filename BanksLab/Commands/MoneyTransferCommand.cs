@@ -18,7 +18,7 @@ namespace BanksLab.Commands
 
         public override void Call()
         {
-            BankAccountCommand last = null;
+            ICommand last = null;
             foreach (var cmd in this)
                 if (last == null || last.Success)
                 {

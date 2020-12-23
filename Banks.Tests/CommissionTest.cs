@@ -22,8 +22,7 @@ namespace Banks.Tests
                 .AddAddress("R13")
                 .AddPassportDetails("432342")
                 .Build();
-            _client1
-                .ChooseBank
+            Client.ChooseBank
                 .Tinkoff()
                 .CreateBankAccount
                 .CreatCreditAccount(_client1, new CreditAccountInformation(-3000, 300, 5000));

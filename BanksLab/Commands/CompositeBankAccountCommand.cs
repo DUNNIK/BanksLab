@@ -4,13 +4,13 @@ using System.Linq;
 namespace BanksLab.Commands
 {
     public class CompositeBankAccountCommand
-        : List<BankAccountCommand>, ICommand
+        : List<ICommand>, ICommand
     {
         public CompositeBankAccountCommand()
         {
         }
 
-        public CompositeBankAccountCommand(IEnumerable<BankAccountCommand> collection)
+        public CompositeBankAccountCommand(IEnumerable<ICommand> collection)
             : base(collection)
         {
         }
@@ -28,7 +28,7 @@ namespace BanksLab.Commands
         public virtual void Undo()
         {
             foreach (var cmd in
-                ((IEnumerable<BankAccountCommand>) this).Reverse())
+                ((IEnumerable<ICommand>) this).Reverse())
                 cmd.Undo();
         }
 
