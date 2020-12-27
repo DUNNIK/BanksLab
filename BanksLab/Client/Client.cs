@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BanksLab.Bank;
 using BanksLab.BankAccounts;
@@ -9,29 +10,32 @@ namespace BanksLab.Client
 {
     public class Client
     {
-        protected internal string Name;
-        protected internal string Surname;
-        protected internal string PassportDetails;
-        protected internal string Address;
-        public readonly List<string> BankAccountsIdsList;
+        private readonly string _name;
+        private readonly string _surname;
+        private readonly string _passportDetails;
+        private readonly string _address;
+        public readonly List<string> BankAccountsIdsList = new List<string>();
 
-        public Client()
+        public Client(string name, string surname, string passportDetails, string address)
         {
-            BankAccountsIdsList = new List<string>();
+            _name = name;
+            _surname = surname;
+            _passportDetails = passportDetails;
+            _address = address;
         }
         protected Client(Client client)
         {
-            Name = client.Name;
-            Surname = client.Surname;
-            Address = client.Address;
-            PassportDetails = client.PassportDetails;
+            _name = client._name;
+            _surname = client._surname;
+            _address = client._address;
+            _passportDetails = client._passportDetails;
         }
         
         public static AllBanksManager ChooseBank => new AllBanksManager();
 
-        public bool IsValidate()
+        public bool IsNotDoubtful()
         {
-            return Name != null && Surname != null;
+            return _address != null && _passportDetails != null;
         }
 
         public void DepositMoneyOnYourBankAccount(string id, double amount)
@@ -90,6 +94,11 @@ namespace BanksLab.Client
             if (IsItYourAccount(accountId)) throw new YourBankAccountException();
             var account = FindAccount(accountId);
             account.RestorePreviousAccountState();
+        }
+
+        public void GetMyPercents(string accountId, DateTime time)
+        {
+            
         }
     }
 }
