@@ -22,8 +22,8 @@ namespace Banks.Tests
                 .AddAddress("R13")
                 .AddPassportDetails("432342")
                 .Build();
-            Client.ChooseBank
-                .Tinkoff()
+           _client1.ChooseBank
+                .FirstBank()
                 .CreateBankAccount
                 .CreatCreditAccount(_client1, new CreditAccountInformation(-3000, 300, 5000));
             SystemTime.SetDateTime(DateTime.Now.AddMonths(1).AddDays(2));

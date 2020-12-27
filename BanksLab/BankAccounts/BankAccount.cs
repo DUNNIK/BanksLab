@@ -31,7 +31,7 @@ namespace BanksLab.BankAccounts
 
         protected bool CheckingForNotValidateAccount(double amount)
         {
-            return !_client.IsNotDoubtful() && amount >= _bankLimitAmount;
+            return _client.IsDoubtful() && amount >= _bankLimitAmount;
         }
         public abstract bool Withdraw(double amount);
 

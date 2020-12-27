@@ -21,8 +21,8 @@ namespace Banks.Tests
                 .AddAddress("ABC123")
                 .AddPassportDetails("727272")
                 .Build();
-            Client.ChooseBank
-                .Tinkoff()
+            _client.ChooseBank
+                .FirstBank()
                 .CreateBankAccount
                 .CreatDebitAccount(_client, new DebitAccountInformation(365, 200));
             
@@ -33,8 +33,8 @@ namespace Banks.Tests
                 .AddAddress("R13")
                 .AddPassportDetails("432342")
                 .Build();
-            Client.ChooseBank
-                .Tinkoff()
+            _client1.ChooseBank
+                .FirstBank()
                 .CreateBankAccount
                 .CreatCreditAccount(_client1, new CreditAccountInformation(-3000, 300, 5000));
         }
@@ -63,15 +63,15 @@ namespace Banks.Tests
         }
 
         [Test]
-        public void NotValidAccount_WithDraw700FromAccount_NothingAnd3300()
+        public void NotValidAccount_WithDraw700FromAccount_NothingNothing3800()
         {
             var clientBuilder2 = new ClientBuilder();
 
             var client2 = clientBuilder2
                 .AddName("Nikita")
                 .Build();
-            Client.ChooseBank
-                .Tinkoff()
+            client2.ChooseBank
+                .FirstBank()
                 .CreateBankAccount
                 .CreatDebitAccount(client2, new DebitAccountInformation(4, 4000));
             client2.WithdrawMoneyOnYourBankAccount(client2.BankAccountsIdsList[0], 700);
@@ -80,7 +80,9 @@ namespace Banks.Tests
             clientBuilder2
                 .AddSurname("Dunaev");
             client2.WithdrawMoneyOnYourBankAccount(client2.BankAccountsIdsList[0], 700);
-            Assert.That(client2.BankAccountStatus(client2.BankAccountsIdsList[0]), Is.EqualTo("Your Balance: 3300"));
+            Assert.That(client2.BankAccountStatus(client2.BankAccountsIdsList[0]), Is.EqualTo("Your Balance: 4000"));
+            client2.WithdrawMoneyOnYourBankAccount(client2.BankAccountsIdsList[0], 200);
+            Assert.That(client2.BankAccountStatus(client2.BankAccountsIdsList[0]), Is.EqualTo("Your Balance: 3800"));
         }
         [Test]
         public void UnDo_TwoWithdraw500_5000()

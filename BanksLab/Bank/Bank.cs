@@ -3,20 +3,21 @@ using BanksLab.BankAccounts;
 
 namespace BanksLab.Bank
 {
-    public abstract class Bank
+    public class Bank
     {
-        protected readonly int NotValidateSum;
+        protected int NotValidateSum;
         public readonly Dictionary<string, BankAccount> Accounts = new Dictionary<string, BankAccount>();
-        public BankAccountFactory CreateBankAccount => new BankAccountFactory(this);
+        public BankAccountFactory CreateBankAccount => new BankAccountFactory(NotValidateSum, Accounts);
 
-        protected Bank(int notValidateSum)
+        public Bank(int notValidateSum)
         {
             NotValidateSum = notValidateSum;
         }
 
-        protected Bank(Bank bank)
+        protected Bank(int notValidateSum, Dictionary<string, BankAccount> accounts)
         {
-            Accounts = bank.Accounts;
+            NotValidateSum = notValidateSum;
+            Accounts = accounts;
         }
     }
 }

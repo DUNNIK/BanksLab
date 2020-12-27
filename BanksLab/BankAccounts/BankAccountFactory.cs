@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BanksLab.BankAccounts
 {
@@ -41,7 +42,7 @@ namespace BanksLab.BankAccounts
             client.BankAccountsIdsList.Add(id);
         }
 
-        public BankAccountFactory(Bank.Bank bank) : base(bank)
+        public BankAccountFactory(int notValidateSum, Dictionary<string, BankAccount> accounts) : base(notValidateSum, accounts)
         {
         }
     }

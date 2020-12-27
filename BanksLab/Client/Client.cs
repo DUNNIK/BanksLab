@@ -31,11 +31,11 @@ namespace BanksLab.Client
             _passportDetails = client._passportDetails;
         }
         
-        public static AllBanksManager ChooseBank => new AllBanksManager();
+        public AllBanksManager ChooseBank => new AllBanksManager();
 
-        public bool IsNotDoubtful()
+        public bool IsDoubtful()
         {
-            return _address != null && _passportDetails != null;
+            return _address == null && _passportDetails == null;
         }
 
         public void DepositMoneyOnYourBankAccount(string id, double amount)
@@ -75,7 +75,8 @@ namespace BanksLab.Client
                 account = bank.Accounts[id];
             }
 
-            return account;
+            if (account == null) throw new FindAccountException();
+                return account;
         }
 
         public string BankAccountStatus(string id)

@@ -5,16 +5,11 @@ namespace BanksLab.Bank
 {
     public class AllBanksManager
     {
-        public static List<Bank> Banks = new List<Bank>{new TinkoffBank(500)};
+        public static readonly List<Bank> Banks = new List<Bank>{new Bank(500)};
 
-        public Bank Tinkoff()
+        public Bank FirstBank()
         {
-            foreach (var bank in Banks.OfType<TinkoffBank>())
-            {
-                return bank;
-            }
-
-            return new TinkoffBank(1000);
+            return Banks[0];
         }
     }
 }
