@@ -57,5 +57,8 @@ namespace BanksLab.BankAccounts
             _accountCommandsHistory.Remove(command);
             command.Undo();
         }
+
+        public abstract void AddMonthPercents();
+        public abstract void RemoveMonthCommission();
     }
 }

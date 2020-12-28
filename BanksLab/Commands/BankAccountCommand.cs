@@ -22,16 +22,25 @@ namespace BanksLab.Commands
             _amount = amount;
         }
 
+        private void PercentsAndCommissionAction()
+        {
+            _account.AddMonthPercents();
+            _account.RemoveMonthCommission();
+        }
         public void Call()
         {
             switch (_action)
             {
                 case Action.Deposit:
+                    PercentsAndCommissionAction();
                     _account.Deposit(_amount);
                     Success = true;
+                    PercentsAndCommissionAction();
                     break;
                 case Action.Withdraw:
+                    PercentsAndCommissionAction();
                     Success = _account.Withdraw(_amount);
+                    PercentsAndCommissionAction();
                     break;
                 default:
                     throw new ActionArgumentsException();

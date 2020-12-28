@@ -15,6 +15,7 @@ namespace Banks.Tests
         [SetUp]
         public void Setup()
         {
+            SystemTime.ResetDateTime();
             var clientBuilder = new ClientBuilder();
 
             _client = clientBuilder
@@ -26,16 +27,15 @@ namespace Banks.Tests
             _client.ChooseBank
                 .FirstBank()
                 .CreateBankAccount
-                .CreatDebitAccount(_client, new DebitAccountInformation(365, 200));
-            SystemTime.SetDateTime(DateTime.Now.AddMonths(1).AddDays(2));
+                .CreatDebitAccount(_client, new DebitAccountInformation(12, 200));
         }
         
         [Test]
         public void PercentsDebitAccount_OneMonth_OneTimePercents()
         {
             SystemTime.SetDateTime(DateTime.Now.AddMonths(1).AddDays(2));
-            Thread.Sleep(2000);
-            Assert.That(_client.BankAccountStatus(_client.BankAccountsIdsList[0]), Is.EqualTo("Your Balance: 6400"));
+            _client.DepositMoneyOnYourBankAccount(_client.BankAccountsIdsList[0], 0);
+            Assert.That(_client.BankAccountStatus(_client.BankAccountsIdsList[0]), Is.EqualTo("Your Balance: 202"));
         }
     }
 }

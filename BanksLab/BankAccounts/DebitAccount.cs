@@ -11,7 +11,7 @@ namespace BanksLab.BankAccounts
         public DebitAccount(Client.Client client, int bankLimitAmount, DebitAccountInformation information) : base(client, bankLimitAmount, information.Balance)
         {
             PercentOnAccount = information.PercentOnAccount;
-            AddPercents();
+            //AddPercents();
         }
 
         public override bool Withdraw(double amount)
@@ -22,6 +22,44 @@ namespace BanksLab.BankAccounts
             return true;
         }
 
+        public override void AddMonthPercents()
+        {
+            if (SystemTime.Now.Invoke() > _lastChargeTime)
+            {
+                PlusPercentsAction();
+            }
+            else
+            {
+                MinusPercentsAction();
+            }
+        }
+
+        public override void RemoveMonthCommission()
+        {
+            Balance -= 0;
+        }
+
+        private void PlusPercentsAction()
+        {
+            while (MonthCondition1())
+            {
+                _lastChargeTime = _lastChargeTime.AddMonths(1);
+                Balance += MonthPercents();
+            }
+        }
+
+        private double MonthPercents()
+        {
+            return Balance * (PercentOnAccount / 12) / 100;
+        }
+        private void MinusPercentsAction()
+        {
+            while (MonthMinusCondition())
+            {
+                _lastChargeTime = _lastChargeTime.AddMonths(-1);
+                Balance -= MonthPercents();
+            }
+        }
         private async void AddPercents()
         {
             await Task.Run(() =>
@@ -54,6 +92,15 @@ namespace BanksLab.BankAccounts
         private bool MonthCondition()
         {
             return (_lastPercentsTime - _lastChargeTime).Days == 31;
+        }
+        private bool MonthCondition1()
+        {
+            return (SystemTime.Now.Invoke() - _lastChargeTime).Days >= 31;
+        }
+
+        private bool MonthMinusCondition()
+        {
+            return (SystemTime.Now.Invoke() - _lastChargeTime).Days <= -31;
         }
     }
     public class DebitAccountInformation

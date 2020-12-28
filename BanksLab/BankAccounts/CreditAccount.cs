@@ -11,7 +11,7 @@ namespace BanksLab.BankAccounts
         {
             OverdraftLimit = information.OverdraftLimit;
             _commission = information.Commission;
-            RemoveCommission();
+            //RemoveCommission();
         }
 
         public override bool Withdraw(double amount)
@@ -22,6 +22,40 @@ namespace BanksLab.BankAccounts
             return true;
         }
 
+        public override void AddMonthPercents()
+        {
+            Balance += 0;
+        }
+
+        public override void RemoveMonthCommission()
+        {
+            if (SystemTime.Now.Invoke() > _lastCommissionTime)
+            {
+                PlusCommissionAction();
+            }
+            else
+            {
+                MinusCommissionAction();
+            }
+        }
+
+        private void PlusCommissionAction()
+        {
+            while (MinusBalance() && MonthCondition())
+            {
+                _lastCommissionTime = _lastCommissionTime.AddMonths(1);
+                Balance -= _commission;
+            }
+        }
+
+        private void MinusCommissionAction()
+        {
+            while (MinusBalance() && MonthMinusCondition())
+            {
+                _lastCommissionTime = _lastCommissionTime.AddMonths(-1);
+                Balance += _commission;
+            }
+        }
         private async void RemoveCommission()
         {
             await Task.Run(() =>
@@ -44,6 +78,10 @@ namespace BanksLab.BankAccounts
         private bool MonthCondition()
         {
             return (SystemTime.Now.Invoke() - _lastCommissionTime).Days >= 31;
+        }
+        private bool MonthMinusCondition()
+        {
+            return (SystemTime.Now.Invoke() - _lastCommissionTime).Days <= -31;
         }
     }
 

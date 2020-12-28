@@ -13,7 +13,7 @@ namespace BanksLab.BankAccounts
         {
             _depositEndDate = information.DepositEndDate;
             PercentOnAccount = FindingPercent();
-            AddPercents();
+            //AddPercents();
         }
 
         private double FindingPercent()
@@ -57,6 +57,46 @@ namespace BanksLab.BankAccounts
             return true;
         }
 
+        public override void AddMonthPercents()
+        {
+            if (SystemTime.Now.Invoke() > _lastChargeTime)
+            {
+                PlusPercentsAction();
+            }
+            else
+            {
+                MinusPercentsAction();
+            }
+        }
+
+        public override void RemoveMonthCommission()
+        {
+            Balance -= 0;
+        }
+
+        private void PlusPercentsAction()
+        {
+            while (MonthCondition())
+            {
+                _lastChargeTime = _lastChargeTime.AddMonths(1);
+                Balance += MonthPercents();
+                PercentOnAccount = FindingPercent();
+            }
+        }
+
+        private double MonthPercents()
+        {
+            return Balance * (PercentOnAccount / 12) / 100;
+        }
+        private void MinusPercentsAction()
+        {
+            while (MonthMinusCondition())
+            {
+                _lastChargeTime = _lastChargeTime.AddMonths(-1);
+                Balance -= MonthPercents();
+                PercentOnAccount = FindingPercent();
+            }
+        }
         private async void AddPercents()
         {
             await Task.Run(() =>
@@ -90,6 +130,10 @@ namespace BanksLab.BankAccounts
         private bool MonthCondition()
         {
             return (_lastPercentsTime - _lastChargeTime).Days == 31;
+        }
+        private bool MonthMinusCondition()
+        {
+            return (SystemTime.Now.Invoke() - _lastChargeTime).Days <= -31;
         }
     }
     public class DepositAccountInformation
